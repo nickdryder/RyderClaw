@@ -103,6 +103,13 @@ function stagePluginRuntimeOverlay(sourceDir, targetDir) {
       continue;
     }
 
+    // On Windows, file symlinks require Developer Mode or elevated privileges.
+    // Fall back to copying for non-JS files that aren't handled above.
+    if (process.platform === "win32") {
+      fs.copyFileSync(sourcePath, targetPath);
+      continue;
+    }
+
     symlinkPath(sourcePath, targetPath);
   }
 }
